@@ -6,7 +6,7 @@ yarn.lock
 .idea
 **/coverage/
 **/__tests__/__snapshots__/
-package-lock.json
+api/package-lock.json
 target/
 node/
 *.snap

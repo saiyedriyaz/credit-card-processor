@@ -33,6 +33,10 @@ class Customer {
         this.express.use(bodyParser.urlencoded({extended: false}));
     }
 
+    public helloTest() {
+        return true;
+    }
+
     private routes(): void {
         // request to get all the customers
         this.express.get("/customers", (req, res, next) => {

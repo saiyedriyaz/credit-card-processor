@@ -3,6 +3,8 @@ import * as express from "express";
 import { Logger } from "./logger/logger";
 import Routes from "./routes/routes";
 
+const cors = require('cors');
+
 class App {
 
     public express: express.Application;
@@ -19,6 +21,7 @@ class App {
     private middleware(): void {
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({ extended: false }));
+        this.express.use(cors());
     }
 
     private routes(): void {
