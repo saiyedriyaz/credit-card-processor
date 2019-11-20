@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './Create.css'
 
-export interface IValues {
+export interface FormData {
     name: string,
     cardNumber: string,
     balance: string,
@@ -9,20 +9,20 @@ export interface IValues {
     currency: string,
 }
 
-export interface IFormState {
+export interface FormState {
     [key: string]: any;
 
-    values: IValues[];
+    customers: FormData[];
 }
 
 interface FormProps {
-    onSubmit: (formData: IValues) => void;
+    onSubmit: (formData: FormData) => void;
     errors: any[];
     submitSuccess: boolean;
     submitError: boolean;
 }
 
-class Create extends React.Component<FormProps, IFormState> {
+class Create extends React.Component<FormProps, FormState> {
     constructor(props: FormProps) {
         super(props);
         this.state = {
@@ -31,11 +31,10 @@ class Create extends React.Component<FormProps, IFormState> {
             balance: '',
             limit: null,
             currency: '',
-            values: [],
+            customers: [],
             allFieldsValid: false
         }
     }
-
 
     private processFormSubmission = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
@@ -59,8 +58,6 @@ class Create extends React.Component<FormProps, IFormState> {
     }
 
     public render() {
-        console.log(this.props)
-        // const {submitSuccess, submitError, errors} = this.state;
         const {submitSuccess, submitError, errors} = this.props;
         return (
             <div>

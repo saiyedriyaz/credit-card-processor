@@ -1,19 +1,18 @@
 import * as React from 'react';
 import './App.css';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
-import Create, {IValues} from './components/customer/Create';
+import Create, {FormData} from './components/customer/Create';
 import Table from "./components/customer/Table";
 import axios from "axios";
 
-interface IState {
+interface AppProps {
     customers: any[];
     errors: any[];
     submitSuccess: boolean;
     submitError: boolean;
 }
 
-class App extends React.Component<RouteComponentProps<any>, IState> {
-
+class App extends React.Component<RouteComponentProps<any>, AppProps> {
     constructor(props: RouteComponentProps) {
         super(props);
         this.state = {
@@ -30,24 +29,21 @@ class App extends React.Component<RouteComponentProps<any>, IState> {
         })
     }
 
-    public postData = (formData: IValues) => {
+    public postData = (formData: FormData) => {
         const messages = this.validateFormData(formData);
-        let valid = messages.length == 0;
-        if (valid) {
+        if (messages.length == 0) {
             axios.post(`http://localhost:3070/api/customers`, formData).then((response) => {
-                this.setState({customers: response.data})
+                this.handleUpdate({customers: response.data, submitSuccess: true, submitError: false})
             }).catch(error => {
                 let messages: String[] = [];
                 for (const val of error.response.data.errors) {
-                    console.log(val)
                     messages.push(val.param + " " + val.msg)
                 }
                 this.handleUpdate({errors: messages, submitSuccess: false, submitError: true})
             });
         } else {
-            //this.setState({submitError: true, loading: false});
+            console.error('Server responded with validation errors')
             this.handleUpdate({errors: messages, submitSuccess: false, submitError: true})
-            console.error('Invalid Form')
         }
     }
 
@@ -55,12 +51,11 @@ class App extends React.Component<RouteComponentProps<any>, IState> {
         this.setState(result);
     }
 
-
     public render() {
-        console.log('rerender');
         return (
             <div>
-                <Create onSubmit={this.postData} errors={this.state.errors} submitSuccess={this.state.submitSuccess} submitError={this.state.submitError} />
+                <Create onSubmit={this.postData} errors={this.state.errors} submitSuccess={this.state.submitSuccess}
+                        submitError={this.state.submitError}/>
                 <Table customers={this.state.customers}/>
             </div>
         );
@@ -77,7 +72,6 @@ class App extends React.Component<RouteComponentProps<any>, IState> {
         if (formData.cardNumber == null || formData.cardNumber.length != 10) {
             errorResult.push('Card Number must be 10 characters long.')
         }
-        // this.setState({errors: errorResult});
         return errorResult;
     }
 
