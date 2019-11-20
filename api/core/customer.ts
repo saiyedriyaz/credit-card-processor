@@ -55,13 +55,13 @@ class Customer {
         this.express.post("/customers", [
                 check('cardNumber')
                     .isNumeric().withMessage('Must be only numeric chars')
-                /*.isLength({min: 10, max: 10}).withMessage('Must be of 10 chars')
-                .custom(input => {
-                    if (!luhn.validate(input)) {
-                        throw new Error("Not valid as per LUHN");
-                    }
-                    return true;
-                })*/
+                    .isLength({min: 10, max: 10}).withMessage('Must be of 10 chars')
+                    .custom(input => {
+                        if (!luhn.validate(input)) {
+                            throw new Error("Not valid as per LUHN");
+                        }
+                        return true;
+                    })
             ],
             (req, res, next) => {
                 const errors = validationResult(req);

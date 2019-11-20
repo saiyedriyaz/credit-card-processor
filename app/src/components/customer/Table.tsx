@@ -8,8 +8,6 @@ interface TableProps {
 }
 
 class Table extends React.Component<TableProps> {
-
-
     public render() {
         const {customers} = this.props;
         return (

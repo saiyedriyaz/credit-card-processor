@@ -1,6 +1,4 @@
 import * as React from 'react';
-import axios from 'axios';
-import {RouteComponentProps, withRouter} from 'react-router-dom';
 import './Create.css'
 
 export interface IValues {
@@ -15,17 +13,16 @@ export interface IFormState {
     [key: string]: any;
 
     values: IValues[];
-    submitSuccess: boolean;
-    submitError: boolean;
-    loading: boolean;
-    errors: { name?: string, cardNumber?: string, limit?: string },
 }
+
 interface FormProps {
     onSubmit: (formData: IValues) => void;
+    errors: any[];
+    submitSuccess: boolean;
+    submitError: boolean;
 }
 
 class Create extends React.Component<FormProps, IFormState> {
-
     constructor(props: FormProps) {
         super(props);
         this.state = {
@@ -35,36 +32,14 @@ class Create extends React.Component<FormProps, IFormState> {
             limit: null,
             currency: '',
             values: [],
-            loading: false,
-            submitSuccess: false,
-            submitError: false,
-            errors: {name: '', cardNumber: '', limit: ''},
             allFieldsValid: false
         }
     }
 
-    validateFormData = (formData: { balance: any; name: any; limit: any; currency: any; cardNumber: any }) => {
-        let valid = true;
-        const errorResult: { name?: any, cardNumber?: any, limit?: any } = {};
-        if (formData.name == null || formData.name.length < 3) {
-            errorResult.name = 'Name must be at least 3 characters long.'
-            valid = false;
-        }
-        if (formData.limit == null || formData.limit < 1) {
-            errorResult.limit = 'Card limit must be greater than 0.'
-            valid = false;
-        }
-        if (formData.cardNumber == null || formData.cardNumber.length != 10) {
-            errorResult.cardNumber = 'Card Number must be 10 characters long.'
-            valid = false;
-        }
-        this.setState({errors: errorResult});
-        return valid;
-    }
 
     private processFormSubmission = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
-        const { onSubmit } = this.props;
+        const {onSubmit} = this.props;
         const formData = {
             name: this.state.name,
             cardNumber: this.state.cardNumber,
@@ -73,19 +48,7 @@ class Create extends React.Component<FormProps, IFormState> {
             currency: this.state.currency,
         }
 
-        if (this.validateFormData(formData)) {
-            console.info('Valid Form')
-            this.setState({loading: true});
-
-            this.setState({submitSuccess: true, values: [...this.state.values, formData], loading: false});
-
-            onSubmit(formData);
-
-        } else {
-            this.setState({submitError: true, loading: false});
-            console.error('Invalid Form')
-            console.error(this.state.errors.name);
-        }
+        onSubmit(formData);
     }
 
     private handleInputChanges = (e: React.FormEvent<HTMLInputElement>) => {
@@ -96,7 +59,9 @@ class Create extends React.Component<FormProps, IFormState> {
     }
 
     public render() {
-        const {submitSuccess, submitError, loading} = this.state;
+        console.log(this.props)
+        // const {submitSuccess, submitError, errors} = this.state;
+        const {submitSuccess, submitError, errors} = this.props;
         return (
             <div>
                 <div className={"form-wrapper"}>
@@ -114,13 +79,7 @@ class Create extends React.Component<FormProps, IFormState> {
                     {submitError && (
                         <div>
                             <div className="error">
-                                {this.state.errors.name}
-                            </div>
-                            <div className="error">
-                                {this.state.errors.cardNumber}
-                            </div>
-                            <div className="error">
-                                {this.state.errors.limit}
+                                {errors}
                             </div>
                         </div>
                     )}
