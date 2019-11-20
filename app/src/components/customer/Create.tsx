@@ -1,6 +1,7 @@
 import * as React from 'react';
 import axios from 'axios';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
+import './Create.css'
 
 export interface IValues {
     name: string,
@@ -17,13 +18,15 @@ export interface IFormState {
     submitSuccess: boolean;
     submitError: boolean;
     loading: boolean;
-    errors: { name: '', cardNumber: '', limit: '' },
+    errors: { name?: string, cardNumber?: string, limit?: string },
+}
+interface FormProps {
+    onSubmit: (formData: IValues) => void;
 }
 
+class Create extends React.Component<FormProps, IFormState> {
 
-class Create extends React.Component<RouteComponentProps, IFormState> {
-
-    constructor(props: RouteComponentProps) {
+    constructor(props: FormProps) {
         super(props);
         this.state = {
             name: null,
@@ -38,27 +41,30 @@ class Create extends React.Component<RouteComponentProps, IFormState> {
             errors: {name: '', cardNumber: '', limit: ''},
             allFieldsValid: false
         }
+    }
 
+    validateFormData = (formData: { balance: any; name: any; limit: any; currency: any; cardNumber: any }) => {
+        let valid = true;
+        const errorResult: { name?: any, cardNumber?: any, limit?: any } = {};
+        if (formData.name == null || formData.name.length < 3) {
+            errorResult.name = 'Name must be at least 3 characters long.'
+            valid = false;
+        }
+        if (formData.limit == null || formData.limit < 1) {
+            errorResult.limit = 'Card limit must be greater than 0.'
+            valid = false;
+        }
+        if (formData.cardNumber == null || formData.cardNumber.length != 10) {
+            errorResult.cardNumber = 'Card Number must be 10 characters long.'
+            valid = false;
+        }
+        this.setState({errors: errorResult});
+        return valid;
     }
 
     private processFormSubmission = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
-
-        function validateFormData(errors: { name: any, cardNumber: any, limit: any }, formData: { balance: any; name: any; limit: any; currency: any; cardNumber: any }) {
-            let valid = true;
-            if (formData.name == null || formData.name.length < 3) {
-                errors.name = 'Name must be at least 3 characters long.'
-                valid = false;
-            } else if (formData.limit == null || formData.limit < 1) {
-                errors.limit = 'Card limit must be greater than 0.'
-                valid = false;
-            } else if (formData.cardNumber == null || formData.cardNumber.length != 10) {
-                errors.cardNumber = 'Card Number must be 10 characters long.'
-                valid = false;
-            }
-            return valid;
-        }
-
+        const { onSubmit } = this.props;
         const formData = {
             name: this.state.name,
             cardNumber: this.state.cardNumber,
@@ -67,19 +73,16 @@ class Create extends React.Component<RouteComponentProps, IFormState> {
             currency: this.state.currency,
         }
 
-
-        if (validateFormData(this.state.errors, formData)) {
+        if (this.validateFormData(formData)) {
             console.info('Valid Form')
             this.setState({loading: true});
 
             this.setState({submitSuccess: true, values: [...this.state.values, formData], loading: false});
-            axios.post(`http://localhost:3070/api/customers`, formData).then(data => [
-                setTimeout(() => {
-                    this.props.history.push('/');
-                }, 1500)
-            ]);
+
+            onSubmit(formData);
+
         } else {
-            this.setState({submitError: true, errors: this.state.errors, loading: false});
+            this.setState({submitError: true, loading: false});
             console.error('Invalid Form')
             console.error(this.state.errors.name);
         }
@@ -103,20 +106,26 @@ class Create extends React.Component<RouteComponentProps, IFormState> {
                     )}
 
                     {submitSuccess && (
-                        <div className="alert alert-info" role="alert">
+                        <div className="success">
                             The form was successfully submitted!
                         </div>
                     )}
 
                     {submitError && (
-                        <div className="alert alert-info" role="alert">
-                            {this.state.errors.name}
-                            {this.state.errors.cardNumber}
-                            {this.state.errors.limit}
+                        <div>
+                            <div className="error">
+                                {this.state.errors.name}
+                            </div>
+                            <div className="error">
+                                {this.state.errors.cardNumber}
+                            </div>
+                            <div className="error">
+                                {this.state.errors.limit}
+                            </div>
                         </div>
                     )}
 
-                    <form id={"create-post-form"} onSubmit={this.processFormSubmission} noValidate={true}>
+                    <form onSubmit={this.processFormSubmission} noValidate={true}>
                         <div>
                             <label htmlFor="name">Name </label><br/>
                             <input type="text" id="name" onChange={(e) => this.handleInputChanges(e)} name="name"
@@ -126,30 +135,27 @@ class Create extends React.Component<RouteComponentProps, IFormState> {
                         <div>
                             <label htmlFor="cardNumber"> Card Number </label> <br/>
                             <input type="text" id="cardNumber" onChange={(e) => this.handleInputChanges(e)}
-                                   name="cardNumber" className="form-control"
-                                   placeholder="Enter card number" required/>
+                                   name="cardNumber" placeholder="Enter card number" required/>
                         </div>
                         <br/>
 
                         <div>
                             <label htmlFor="limit"> Limit </label><br/>
                             <input type="limit" id="limit" onChange={(e) => this.handleInputChanges(e)} name="limit"
-                                   className="form-control" placeholder="Enter card limit" required/>
+                                   placeholder="Enter card limit" required/>
                         </div>
                         <br/>
-                        <div className="form-group col-md-4 pull-right">
-                            <button className="btn btn-success" type="submit">
+                        <div>
+                            <button className="button" type="submit">
                                 Add
                             </button>
-                            {loading &&
-                            <span className="fa fa-circle-o-notch fa-spin"/>
-                            }
                         </div>
                     </form>
+
                 </div>
             </div>
         )
     }
 }
 
-export default withRouter(Create)
+export default Create

@@ -1,52 +1,35 @@
 import * as React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 import axios from 'axios';
+import './Table.css'
 
-interface IState {
+interface TableProps {
     customers: any[];
 }
 
-class Table extends React.Component<RouteComponentProps, IState> {
-    constructor(props: RouteComponentProps) {
-        super(props);
-        this.state = {customers: []}
-    }
+class Table extends React.Component<TableProps> {
 
-    public componentDidMount(): void {
-        axios.get(`http://localhost:3070/api/customers`).then(data => {
-            this.setState({customers: data.data})
-        })
-    }
-
-    renderTableHeader() {
-        let header = Object.keys(this.state.customers[0])
-        return header.map((key, index) => {
-            return <th key={index}>{key.toUpperCase()}</th>
-        })
-    }
 
     public render() {
-        const customers = this.state.customers;
+        const {customers} = this.props;
         return (
             <div className={"form-wrapper"}>
                 <div className="text-center">
                     <h2>Existing Cards</h2>
                 </div>
 
-                <div className="table">
-                    <div className="row">
-                        <table className="table table-bordered">
-                            <thead className="thead-light">
+                <div>
+                    <div>
+                        <table>
                             <tr>
                                 <th scope="col">Name</th>
                                 <th scope="col">Card Number</th>
                                 <th scope="col">Balance</th>
                                 <th scope="col">Limt</th>
                             </tr>
-                            </thead>
                             <tbody>
                             {customers && customers.map(customer =>
-                                <tr key={customer.id}>
+                                <tr key={customer.name}>
                                     <td>{customer.name}</td>
                                     <td>{customer.cardNumber}</td>
                                     <td>{customer.balance}</td>
@@ -63,4 +46,4 @@ class Table extends React.Component<RouteComponentProps, IState> {
     }
 }
 
-export default withRouter(Table)
+export default Table
