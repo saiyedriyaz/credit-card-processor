@@ -6,6 +6,7 @@ interface TableProps {
 }
 
 class Table extends React.Component<TableProps> {
+
     public render() {
         const {customers} = this.props;
         return (
@@ -13,7 +14,6 @@ class Table extends React.Component<TableProps> {
                 <div className="text-center">
                     <h2>Existing Cards</h2>
                 </div>
-
                 <div>
                     <div>
                         <table>
@@ -21,24 +21,31 @@ class Table extends React.Component<TableProps> {
                                 <th scope="col">Name</th>
                                 <th scope="col">Card Number</th>
                                 <th scope="col">Balance</th>
-                                <th scope="col">Limt</th>
+                                <th scope="col">Limit</th>
                             </tr>
                             <tbody>
                             {customers && customers.map(customer =>
-                                <tr key={customer.name}>
+                                <tr key={customer.id}>
                                     <td>{customer.name}</td>
                                     <td>{customer.cardNumber}</td>
-                                    <td>{customer.balance}</td>
-                                    <td>{customer.limit}</td>
+                                    <td className={this.getCellStyleClass(customer)}>{customer.currency}{customer.balance}</td>
+                                    <td>{customer.currency}{customer.limit}</td>
                                 </tr>
                             )}
                             </tbody>
                         </table>
                     </div>
+                    <br></br>
                 </div>
 
             </div>
         )
+    }
+
+    getCellStyleClass = (customer: any) => {
+        if (customer.balance < 1) {
+            return "red";
+        }
     }
 }
 

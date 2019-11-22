@@ -15,7 +15,7 @@ export interface FormState {
     customers: FormData[];
 }
 
-interface FormProps {
+export interface FormProps {
     onSubmit: (formData: FormData) => void;
     errors: any[];
     submitSuccess: boolean;
@@ -59,6 +59,13 @@ class Create extends React.Component<FormProps, FormState> {
 
     public render() {
         const {submitSuccess, submitError, errors} = this.props;
+
+        let errorDiv: any[] = []
+        if (errors.length > 0) {
+            for (let error of errors) {
+                errorDiv.push(<div className="error"> {error} </div>);
+            }
+        }
         return (
             <div>
                 <div className={"form-wrapper"}>
@@ -75,9 +82,7 @@ class Create extends React.Component<FormProps, FormState> {
 
                     {submitError && (
                         <div>
-                            <div className="error">
-                                {errors}
-                            </div>
+                            {errorDiv}
                         </div>
                     )}
 
@@ -87,27 +92,23 @@ class Create extends React.Component<FormProps, FormState> {
                             <input type="text" id="name" onChange={(e) => this.handleInputChanges(e)} name="name"
                                    placeholder="Enter customer's name" required/>
                         </div>
-                        <br/>
                         <div>
                             <label htmlFor="cardNumber"> Card Number </label> <br/>
-                            <input type="text" id="cardNumber" onChange={(e) => this.handleInputChanges(e)}
+                            <input type="number" id="cardNumber" onChange={(e) => this.handleInputChanges(e)}
                                    name="cardNumber" placeholder="Enter card number" required/>
                         </div>
-                        <br/>
 
                         <div>
                             <label htmlFor="limit"> Limit </label><br/>
                             <input type="limit" id="limit" onChange={(e) => this.handleInputChanges(e)} name="limit"
                                    placeholder="Enter card limit" required/>
                         </div>
-                        <br/>
                         <div>
                             <button className="button" type="submit">
                                 Add
                             </button>
                         </div>
                     </form>
-
                 </div>
             </div>
         )
