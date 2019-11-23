@@ -1,12 +1,10 @@
 {
-  "name": "app",
+  "name": "credit-card-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@types/jest": "^24.0.23",
-    "@types/node": "12.12.8",
+    "@types/jest": "24.0.23",
+    "@types/node": "12.12.11",
     "@types/react": "16.9.11",
     "@types/react-dom": "16.9.4",
     "@types/react-router-dom": "^5.1.2",
@@ -15,15 +13,13 @@
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
-    "ts-jest": "^24.1.0",
     "typescript": "3.7.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "eject": "react-scripts eject",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -41,12 +37,10 @@
     ]
   },
   "devDependencies": {
-    "@babel/preset-typescript": "^7.7.2",
-    "babel-jest": "^24.9.0",
-    "babel-preset-stage-0": "^6.24.1",
+    "@types/enzyme": "^3.10.3",
+    "@types/enzyme-adapter-react-16": "^1.0.5",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
-    "jest": "^24.9.0",
-    "regenerator-runtime": "^0.13.3"
+    "react-addons-test-utils": "^15.6.2"
   }
 }
