@@ -69,7 +69,7 @@ class Create extends React.Component<FormProps, FormState> {
         return (
             <div>
                 <div className={"form-wrapper"}>
-                    <h2> Credit Card System </h2>
+                    <h2>Credit Card System</h2>
                     {!submitSuccess && !submitError && (
                         <h3> Add </h3>
                     )}
