@@ -63,7 +63,7 @@ class Create extends React.Component<FormProps, FormState> {
         let errorDiv: any[] = []
         if (errors.length > 0) {
             for (let error of errors) {
-                errorDiv.push(<div className="error"> {error} </div>);
+                errorDiv.push(<div id={"errorDiv"} className="error"> {error} </div>);
             }
         }
         return (
