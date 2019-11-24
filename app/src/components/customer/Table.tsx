@@ -14,7 +14,7 @@ class Table extends React.Component<TableProps> {
                 <div className="text-center">
                     <h2>Existing Cards</h2>
                 </div>
-                <div>
+                <div id={"tableDataDiv"}>
                     <div>
                         <table>
                             <tr>
